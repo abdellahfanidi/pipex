@@ -14,9 +14,7 @@ char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*str;
 	size_t	i;
-	char	*temp;
 
-	temp = s1;
 	str = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
 	if (!str)
 		return (NULL);
@@ -26,7 +24,5 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (*s2)
 		str[i++] = *(s2++);
 	str[i] = 0;
-	free(temp);
-	temp = NULL;
 	return (str);
 }
