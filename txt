@@ -1,3 +1,0 @@
-cc pipex_101.c ft_split.c get_path_cmd.c ft_strdup.c ft_strjoin.c -o pipex
-
-./pipex a.txt "cat" "grep dd" b.txt

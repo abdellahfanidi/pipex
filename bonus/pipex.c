@@ -5,16 +5,15 @@
 // failing execve :if (execve(path, cmd, envp) == -1) error();
 // check for cmd is execte in main using access not in execution child or parent .
 
-void    error_cmd(char *cmd)
+
+
+void	ft_putstr_fd(char *s, int fd)
 {
-    printf("\033[31mError: command not found : %s\e[0m\n",cmd);
-    exit(1);
+	if (!s || fd < 0)
+		        return ;
+    write(fd, s, ft_strlen(s));
 }
-void	error(void)
-{
-	perror("\033[31mError\e[0m");
-	exit(1);
-}
+
 
 void execute_cmd(char *arg)
 {
@@ -23,9 +22,19 @@ void execute_cmd(char *arg)
     cmd_total = ft_split(arg,' ');
      path_cmd = get_path_cmd(cmd_total);
     if (path_cmd != NULL)
-        execve(path_cmd,cmd_total,NULL);
+    {
+        if(execve(path_cmd,cmd_total,NULL) == -1)
+        {
+            ft_free(cmd_total);
+            free(path_cmd);
+            error();
+        }
+    }
     else
+    {
         error_cmd(cmd_total[0]);
+        ft_free(cmd_total);
+    }
 }
 
 
@@ -34,6 +43,10 @@ void    child_ps(char **av,int *desc)
     int     fd1;
 
     fd1 = open(av[1],O_RDONLY);
+    if (fd1 < 0) {
+        perror(av[1]);
+        exit(1);
+    }
     close(desc[0]);
     dup2(desc[1],1);
     close(desc[1]);
@@ -44,25 +57,21 @@ void    child_ps(char **av,int *desc)
 
 void    parent_ps(char **av,int *desc)
 {
-    /*
-    char buff[10000];
-    read(desc[0],buff,10000);
-        printf("%s",buff);*/
-    close(desc[1]);
-
     int     fd;
-    fd = open(av[4],O_CREAT | O_WRONLY,0644);
+    char    *file;
+
+    close(desc[1]);
+    file = ft_strdup(av[4]);
+    unlink(av[4]);
+    fd = open(file,O_CREAT | O_WRONLY,0644);
     if (fd < 0) {
-        perror("Error opening file");
+        perror(file);
         exit(1);
     }
-    
     dup2(desc[0],0);
     close(desc[0]);
-
     dup2(fd,1);
     close(fd);
-    
     execute_cmd(av[3]);
 }
 
@@ -81,14 +90,15 @@ int main(int ac, char **av)
             error();
         if (pid == 0)
             child_ps(av,desc);
-        
-        wait(NULL);
-        parent_ps(av,desc);
+        else
+        {  
+            wait(NULL);
+            parent_ps(av,desc);
+        }
     }
     else
     {
-        printf("\033[31mError: Bad arguments\e[0m\n");
-		printf("Ex: ./pipex file1 cmd1 cmd2 file2\n");
+        ft_putstr_fd("\033[31mError: Bad arguments\e[0m\n",2);
+		ft_putstr_fd("Ex: ./pipex file1 cmd1 cmd2 file2\n",2);
     }
-    system("leaks");
 }

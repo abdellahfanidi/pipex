@@ -100,4 +100,3 @@ char	**ft_split(char const *s, char c)
 	p[j] = NULL;
 	return (p);
 }
-
