@@ -58,23 +58,12 @@ char	*ft_strjoin(char *s1, char *s2)
 	str[i] = 0;
 	return (str);
 }
-
-char	*ft_strdup(char *src)
+int	ft_strcmp(char *s1, char *s2)
 {
-	char	*new;
-	int		i;
-	int		size;
+	int	i;
 
-	size = ft_strlen(src);
-	new = malloc(sizeof(char) * (size + 1));
-	if (!new)
-		return (NULL);
 	i = 0;
-	while (src[i])
-	{
-		new[i] = src[i];
+	while (s1[i] && s2[i] && s1[i] == s2[i])
 		i++;
-	}
-	new[i] = '\0';
-	return (new);
+	return (s1[i] - s2[i]);
 }

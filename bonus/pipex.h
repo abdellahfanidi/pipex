@@ -13,7 +13,7 @@ char	*get_path_cmd(char **cmd_total);
 void	pipex(int fd1, int fd2, char **av);
 void	error_cmd(char *cmd);
 void	error(void);
-// int 	check_cmds(char **av, int index);
+int	ft_strcmp(char *s,char *s2);
 void	ft_free(char **tab);
 char	**ft_split(char const *s, char c);
 char	*ft_strjoin(char *s1, char *s2);

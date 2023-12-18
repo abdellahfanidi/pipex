@@ -40,39 +40,64 @@ void execute_cmd(char *arg)
 
 void    child_ps(char **av,int *desc)
 {
-    int     fd1;
+    /*int     fd1;
 
-    fd1 = open(av[1],O_RDONLY);
+    fd1 = open(av[2],O_RDONLY);
     if (fd1 < 0) {
-        perror(av[1]);
+       perror(av[2]);
         exit(1);
-    }
+    }*/
+    char buff[4096];
+    char *limiter;
+    int bytes;
+
+    limiter = ft_strjoin(av[2], "\n");
     close(desc[0]);
-    dup2(desc[1],1);
+    while(1)
+    {
+	ft_putstr_fd("heredoc>",0);
+    	bytes = read(0, buff, sizeof(buff));
+	buff[bytes] = '\0';
+	if(bytes == -1)
+	{
+ 	    free(limiter);
+	    perror("Error opening temporary file for reading");
+            exit(1);
+	}
+    	if (ft_strcmp(buff,limiter) == 0)
+	{
+		free(limiter);
+		exit(0);
+	}
+	if (write(desc[1],buff,bytes) == -1)
+	{
+		perror("Error writing to pipe");
+        	exit(1);
+	}
+    }
     close(desc[1]);
+
+    /*dup2(desc[1],1);
     dup2(fd1,0);
-    close(fd1);
-    execute_cmd(av[2]);
+    close(fd1);*/
+    execute_cmd(av[3]);
 }
 
 void    parent_ps(char **av,int *desc)
 {
     int     fd;
-    char    *file;
 
     close(desc[1]);
-    file = ft_strdup(av[4]);
-    unlink(av[4]);
-    fd = open(file,O_CREAT | O_WRONLY,0644);
+    fd = open(av[5],O_CREAT | O_WRONLY | O_APPEND,0644);
     if (fd < 0) {
-        perror(file);
+        perror(av[5]);
         exit(1);
     }
     dup2(desc[0],0);
     close(desc[0]);
     dup2(fd,1);
     close(fd);
-    execute_cmd(av[3]);
+    execute_cmd(av[4]);
 }
 
 
@@ -81,9 +106,10 @@ int main(int ac, char **av)
 {
     int pid;
     int desc[2];
-    if (ac == 5)
+
+    if (ac == 6  && !ft_strcmp(av[1], "here_doc") && ft_strlen(av[1]) == 8)
     {
-        if (pipe(desc) == -1)
+	if (pipe(desc) == -1)
             error();
         pid = fork();
         if (pid < 0)
@@ -99,6 +125,6 @@ int main(int ac, char **av)
     else
     {
         ft_putstr_fd("\033[31mError: Bad arguments\e[0m\n",2);
-		ft_putstr_fd("Ex: ./pipex file1 cmd1 cmd2 file2\n",2);
+		ft_putstr_fd("Ex: ./pipex here_doc LIMITER cmd1 cmd2 file2\n",2);
     }
 }

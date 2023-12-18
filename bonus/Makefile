@@ -1,4 +1,4 @@
-NAME = pipex
+NAME = pipbonus
 CFLAGS  = -Wall -Wextra -Werror
 SRCS = error.c pipex.c utils1.c utils2.c 
 OBJS = error.o pipex.o utils1.o utils2.o 
