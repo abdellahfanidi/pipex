@@ -1,23 +1,28 @@
-hello world
-welcome 101
-nice world
-nice word
-hello
-world
-hdhdhd
-12345678
-12345678
-000000000000000000000
-00000000000000000000
+ff
+Makefile
 error.c
 error.o
 main.c
-Makefile
 new
 pipbonus
 pipex.c
 pipex.h
 pipex.o
+temp
+utils1.c
+utils1.o
+utils2.c
+utils2.o
+Makefile
+error.c
+error.o
+main.c
+new
+pipbonus
+pipex.c
+pipex.h
+pipex.o
+temp
 utils1.c
 utils1.o
 utils2.c

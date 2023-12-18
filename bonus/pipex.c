@@ -50,7 +50,14 @@ void    child_ps(char **av,int *desc)
     char buff[4096];
     char *limiter;
     int bytes;
+    int fd;
 
+    fd = open("temp",O_CREAT | O_RDWR ,0644);
+    if (fd < 0)
+    {
+    	perror("error create temp file");
+	exit(1);
+    }
     limiter = ft_strjoin(av[2], "\n");
     close(desc[0]);
     while(1)
@@ -61,25 +68,20 @@ void    child_ps(char **av,int *desc)
 	if(bytes == -1)
 	{
  	    free(limiter);
-	    perror("Error opening temporary file for reading");
+	    perror("Error read from stdin");
             exit(1);
 	}
     	if (ft_strcmp(buff,limiter) == 0)
 	{
 		free(limiter);
-		exit(0);
+		break;
 	}
-	if (write(desc[1],buff,bytes) == -1)
-	{
-		perror("Error writing to pipe");
-        	exit(1);
-	}
+	write(fd,buff,bytes);
     }
+    dup2(desc[1],1);
     close(desc[1]);
-
-    /*dup2(desc[1],1);
-    dup2(fd1,0);
-    close(fd1);*/
+    dup2(fd,0);
+    close(fd);
     execute_cmd(av[3]);
 }
 
@@ -87,6 +89,7 @@ void    parent_ps(char **av,int *desc)
 {
     int     fd;
 
+    unlink("temp");
     close(desc[1]);
     fd = open(av[5],O_CREAT | O_WRONLY | O_APPEND,0644);
     if (fd < 0) {
