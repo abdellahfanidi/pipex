@@ -1,4 +1,4 @@
-#include "pipex.h"
+#include "pipex_bonus.h"
 static int	ft_len(char const *s, char c)
 {
 	int	i;

@@ -1,11 +1,4 @@
 #include "pipex.h"
-// free for split if path_cmd is not valid !!
-// closing same fds
-// opening file : if (fd == -1) error();
-// failing execve :if (execve(path, cmd, envp) == -1) error();
-// check for cmd is execte in main using access not in execution child or parent .
-
-
 
 void	ft_putstr_fd(char *s, int fd)
 {
@@ -43,7 +36,8 @@ void    child_ps(char **av,int *desc)
     int     fd1;
 
     fd1 = open(av[1],O_RDONLY);
-    if (fd1 < 0) {
+    if (fd1 < 0)
+    {
         perror(av[1]);
         exit(1);
     }
