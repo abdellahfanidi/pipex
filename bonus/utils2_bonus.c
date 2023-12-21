@@ -30,17 +30,7 @@ char	*get_path_cmd(char **cmd_total)
 	return (cmd);
 }
 
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
 
-	i = 0;
-	if (!s)
-		return (i);
-	while (s[i])
-		i++;
-	return (i);
-}
 
 char	*ft_strjoin(char *s1, char *s2)
 {
